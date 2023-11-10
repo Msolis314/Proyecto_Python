@@ -6,13 +6,30 @@ from PIL import ImageTk, Image
 import image as image_fun
 import rezise as re
 #from config import COLOR_SUPERIOR, COLOR_MENU, COLOR_BODY,FG_COLOR,HOVER_COLOR,TEXT_COLOR
+
+#Caracteristicas del sistema
 COLOR_SUPERIOR=("#a7a5a5","#f6f1e8")
 COLOR_MENU=("#a7a5a5","#f6f1e8")
 COLOR_BODY="transparent"
 HOVER_COLOR=("gray70", "gray30")
-TEXT_COLOR=("gray10", "gray90")
+TEXT_COLOR=("gray10", "black")
 FG_COLOR="transparent"
+BUTTOM_HOVER=("gray60","gray25")
 
+def set_font(family):
+    return customtkinter.CTkFont(family=family, size=12)
+
+"""
+Funcion para colocar la ventana en el centro de la pantalla
+Parametros
+----------
+<objeto de pantalla>:
+<ancho ventana>:int
+<largo ventana>: int 
+Retorno
+----------
+Geometria de ventana: instancia de CTk
+"""
 def center(screen, weight_app, height_app):
     screen_weight= screen.winfo_screenwidth()
     screen_height= screen.winfo_screenheight()
@@ -24,10 +41,28 @@ def center(screen, weight_app, height_app):
     # Retorna lo debe ir en geometru
     return screen.geometry(f"{weight_app}x{height_app}+{x}+{y}")
 
+
+"""
+Funcion para leer imagenes
+----------
+<path(directorio donde esta la imagen)>:string
+<name(nombre de la imagen)>:string
+<tam(size que se quiere de la imagen)>: int 
+Retorno
+----------
+carga la imagen con la funcion customtkinter.CTkImage
+"""
 def read_image(path,name, tam= (20,20)):
     return customtkinter.CTkImage(Image.open(os.path.join(path,name)), size=tam)
+
+#Variable del tipo global con el directorio donde estan las imagenes 
 global path_image
 path_image =path_image= os.path.join(os.path.dirname(os.path.realpath("Documents")),"input/Imagenes_Python")
+
+"""
+Clase de la vetana princiapal
+hereda de customtkinter.CTk
+"""
 
 class Main_Window(customtkinter.CTk):
     def __init__(self):
@@ -44,11 +79,19 @@ class Main_Window(customtkinter.CTk):
         weight = 1000
         height = 600
         center(self,weight,height)
+        
 
         self.sections()
+
+    """
+    funcion donde se declaran las secciones presentes en el display
+    """
     def sections(self):
+        #declaracion de los Frames de las secciones principales
         self.up_panel= Upper_Bar(self)
+        #La declaracion de este widget sucede en esta seccion para acceder a la funcion que contrae y despliega el menu
         self.side_menu_image=read_image(path_image,"sidemenu.png",(10,10))
+
         self._menu_bottom= customtkinter.CTkButton(self.up_panel,
                                                    text=" ", 
                                                    
@@ -62,27 +105,35 @@ class Main_Window(customtkinter.CTk):
         self._menu_bottom.pack(side=ttk.LEFT)
         self.menu_panel= Menu_Frame(self)
         self.body_panel=Body_Frame(self)
-        self.up_panel.widgets_upper_bar()
 
+        #Metodos para desplegar widgets
+        self.up_panel.widgets_upper_bar()
         self.menu_panel.widgets_menu(self.body_panel)
+    """
+    funcion para contraer o desplegar el menu lateral
+    """
     def toggle_panel(self):
         if self.menu_panel.winfo_ismapped():
             self.menu_panel.pack_forget()
         else:
             self.menu_panel.pack(side=ttk.LEFT,fill='y')
 
-
+""" 
+Definicion de los Frames de cada seccion 
+Heredan de customtkinter.CTkFrame
+Necesitan que se les pase el Master
+"""
 class Upper_Bar(customtkinter.CTkFrame):
     def __init__(self,master):
         super().__init__(master)
         self.configure(master, fg_color=COLOR_SUPERIOR, height=50)
         self.pack(side=ttk.TOP, fill ='both')
     def widgets_upper_bar(self):
-        font_icons= customtkinter.CTkFont(family="FontAwesome",size=12)
+        
         self.title=customtkinter.CTkLabel(self, 
                                           text_color=TEXT_COLOR,
                                           text="Presupuesto digital",
-                                          font=("Century Gothic",15),
+                                          font=("Cascadia Mono SemiBold",15),
                                           fg_color='transparent',padx=10,
                                           pady=10,
                                           width=16)
@@ -106,12 +157,14 @@ class Menu_Frame(customtkinter.CTkFrame):
         self.configure(master,width=400)
         self.pack(side=ttk.LEFT, fill='both', expand=False)
         self.grid_rowconfigure(5,weight=1)
-
+    """
+    funcion que maneja los widgets del menu
+    recibe por parametro el body que representan donde se debe colocar cada widget
+    """
     def widgets_menu(self,body):
-        weight_menu=20
-        height_menu=2
+       
         self.menu_label=customtkinter.CTkLabel(self, text = " ",compound="top",image=self.menu_icon)
-        self.menu_label.grid(row=0, column=0,padx=20,pady=20)
+        self.menu_label.grid(row=0, column=0,padx=20,pady=20,sticky="nsew")
         self.master=body
         self.data_user= customtkinter.CTkButton(self, text ="Datos del usuario",
                                                 corner_radius=0,
@@ -123,7 +176,7 @@ class Menu_Frame(customtkinter.CTkFrame):
                                                 image=self.image2, 
                                                 anchor="w",
                                                 command=self.evento_data_user)
-        self.data_user.grid(row=2,column=0, sticky="ew")
+        self.data_user.grid(row=2,column=0, sticky="nsew")
         self._analisis= customtkinter.CTkButton(self, text ="Visualizacion de datos",
                                             corner_radius=0,
                                             height=30,
@@ -134,7 +187,7 @@ class Menu_Frame(customtkinter.CTkFrame):
                                             anchor="w",
                                             image=self.image3,
                                             command=self.evento_analisis)
-        self._analisis.grid(row=3,column=0, sticky="ew")
+        self._analisis.grid(row=3,column=0, sticky="nsew")
         self.exportar_datos= customtkinter.CTkButton(self, text ="Exportar_Datos",
                                             corner_radius=0,
                                             height=30,
@@ -145,7 +198,7 @@ class Menu_Frame(customtkinter.CTkFrame):
                                             anchor="w",
                                             image=self.image4,
                                             command=self.evento3)
-        self.exportar_datos.grid(row=4,column=0, sticky="ew")
+        self.exportar_datos.grid(row=4,column=0, sticky="nsew")
         self.Menu_display= customtkinter.CTkOptionMenu(master=self,values = ['blue','dark-blue','green'], command=self.evento_color)
         self.Menu_display.grid(row =6, column=0,padx=20,pady=20 ,sticky = "s")
         self.Menu_display= customtkinter.CTkOptionMenu(master=self,values = ['dark','system','light'], command=self.evento_apariencia)
@@ -168,15 +221,15 @@ class Menu_Frame(customtkinter.CTkFrame):
     def change_window(self,buttom):
         #Esto es para que quede marcada la opcion que se muestra en el momento en pantalla
         if buttom == "analisis":
-            self._analisis.configure(fg_color=("gray60","gray25"))
+            self._analisis.configure(fg_color=BUTTOM_HOVER)
         else:
             self._analisis.configure(fg_color="transparent")
         if buttom == "data_user":
-            self.data_user.configure(fg_color=("gray60","gray25"))
+            self.data_user.configure(fg_color=BUTTOM_HOVER)
         else:
             self.data_user.configure(fg_color="transparent")
         if buttom == "export":
-            self.exportar_datos.configure(fg_color=("gray60","gray25"))
+            self.exportar_datos.configure(fg_color=BUTTOM_HOVER)
         else:
             self.exportar_datos.configure(fg_color="transparent")
         #Creo las instancias de los frames 
@@ -186,18 +239,17 @@ class Menu_Frame(customtkinter.CTkFrame):
 
         #Posiciono los Frames
         if buttom == "data_user":   
-            data.get_frame().pack(side=ttk.RIGHT, fill='both', expand=True)
+            data.get_frame().grid(row=0, column=2, sticky = "nsew")
         else:
-            data.delete_frame()
-
+            data.get_frame().grid_forget()
         if buttom == "analisis":
-            analisis.get_frame().grid(row=0, column=1, sticky = "nsew")
+            analisis.get_frame().grid(row=0, column=2, sticky = "nsew")
         else:
-            analisis.delete_frame()
+            analisis.get_frame().grid_forget()
         if buttom == "export":
-            export.get_frame().grid(row=0, column=1, sticky = "nsew")
+            export.get_frame().grid(row=0, column=2, sticky = "nsew")
         else:
-            export.delete_frame()
+            export.get_frame().grid_forget()
 
 #Clase abstracta para definir caracteristicas de las otras subclases de la ventana
 class SubFrames(customtkinter.CTkFrame):
@@ -210,7 +262,7 @@ class SubFrames(customtkinter.CTkFrame):
     def delete_frame(self):
         for widget in self._layout.winfo_children():
             widget.destroy()
-        self._layout.pack_forget()
+
 
 #Clase para el boton data_user
 class Entrada_DatosFrame(SubFrames):
@@ -223,7 +275,7 @@ class Entrada_DatosFrame(SubFrames):
                                                       image=self.image_ingresos, 
                                                       compound="top",
                                                       command=self.event_boton1)
-        self.buttom_ingresos.grid(row=0 , column= 0, padx=20,pady=10, sticky ="ew")
+        self.buttom_ingresos.grid(row=0 , column= 0, padx=20,pady=10, sticky ="nsew")
 
         # Boton 2 
         self.image_gastos=customtkinter.CTkImage(Image.open(os.path.join(path_image,"expense.png")), size=(40,40))
@@ -231,7 +283,7 @@ class Entrada_DatosFrame(SubFrames):
                                                     text="Gastos",
                                                     image=self.image_gastos, 
                                                     compound="top")
-        self.buttom_gastos.grid(row=1 , column= 0, padx=20,pady=10, sticky ="ew")
+        self.buttom_gastos.grid(row=1 , column= 0, padx=20,pady=10, sticky ="nsew")
 
         #Boton 3
         self.image_presupuesto= customtkinter.CTkImage(Image.open(os.path.join(path_image,"budget.png")), size=(40,40))
@@ -239,12 +291,13 @@ class Entrada_DatosFrame(SubFrames):
                                                    text="Presupuesto",
                                                    image=self.image_presupuesto, 
                                                    compound="top")
-        self.buttom_budget.grid(row=2 , column= 0, padx=20,pady=10, sticky ="ew")
+        self.buttom_budget.grid(row=2 , column= 0, padx=20,pady=10, sticky ="nsew")
         
         self.new_frame=SubFrames(master)
     def event_boton1(self):
-        self._layout.pack_forget()
-        self.new_frame.pack(side=ttk.RIGHT, fill='both', expand=True)
+      
+        self._layout.grid_forget()
+        self.new_frame._layout.grid(row=0, column=2, sticky = "nsew")
         self.new_frame.columnconfigure(0, weight=1)
         
     
@@ -261,7 +314,7 @@ class Analisis(SubFrames):
         self.option_men_var= customtkinter.StringVar(value = "grafica")
         self.options_analisis= customtkinter.CTkOptionMenu(self._layout, values=["Grafica","Pie chart","muestreo","Comparacion"],command=self.get_option_menu_choice ,variable=self.option_men_var)
 
-        self.options_analisis.grid(row=0, column=0,padx=20,pady=10,sticky="ew")
+        self.options_analisis.grid(row=0, column=0,padx=20,pady=10,sticky="nsew")
     def get_option_menu_choice(self,choice):
         print(choice)
 
@@ -271,7 +324,7 @@ class Exportar_datos(SubFrames):
     def __init__(self,master):
         super().__init__(master)
         self.title_frame3= customtkinter.CTkLabel(self._layout, text ="Opciones de descarga",font=customtkinter.CTkFont(family="Century Gothic", weight="bold"))
-        self.title_frame3.grid(row=0, column=0, padx=20,pady=20, sticky="ew",columnspan=2)
+        self.title_frame3.grid(row=0, column=0, padx=20,pady=20, sticky="nsew",columnspan=2)
         #Radio buttoms
         self.radio_var = customtkinter.IntVar(value=0)
         self.op1=customtkinter.CTkRadioButton(self._layout, text="Excel",font=customtkinter.CTkFont(family="Century Gothic"),command=self.radio_event,variable=self.radio_var, value =1)
@@ -290,13 +343,9 @@ class Body_Frame(customtkinter.CTkFrame):
         super().__init__(master)
         self.configure(master,fg_color=COLOR_BODY,width=150)
         self.pack(side=ttk.RIGHT, fill='both', expand=True)
+        
+        self.grid_columnconfigure(2, weight=1)
 #Clase abstracta para definir caracteristicas de las otras subclases de la ventana
-class SubFrames(customtkinter.CTkFrame):
-    def __init__(self, master):
-        super().__init__(master)
-        self._layout= customtkinter.CTkFrame(master, corner_radius=0,fg_color="transparent")
-        self._layout.grid_columnconfigure(0, weight=1)
-    def get_frame(self):
-         return self._layout
+
 app= Main_Window()
 app.mainloop()
