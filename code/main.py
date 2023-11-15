@@ -2,9 +2,8 @@ from tkinter import font
 import os
 import customtkinter
 import ttkbootstrap as ttk
-from PIL import ImageTk, Image
+from PIL import  Image
 
-#from config import COLOR_SUPERIOR, COLOR_MENU, COLOR_BODY,FG_COLOR,HOVER_COLOR,TEXT_COLOR
 
 #Caracteristicas del sistema
 COLOR_SUPERIOR=("#a7a5a5","#f6f1e8")
@@ -28,18 +27,19 @@ def set_font(family):
     except:
         return customtkinter.CTkFont(family='calibri', size=12)
 
-"""
-Funcion para colocar la ventana en el centro de la pantalla
-Parametros
-----------
-<objeto de pantalla>:
-<ancho ventana>:int
-<largo ventana>: int 
-Retorno
-----------
-Geometria de ventana: instancia de CTk
-"""
+
 def center(screen, weight_app, height_app):
+    """
+    Funcion para colocar la ventana en el centro de la pantalla
+    Parametros
+    ----------
+    <objeto de pantalla>:
+    <ancho ventana>:int
+    <largo ventana>: int 
+    Retorno
+    ----------
+    Geometria de ventana: instancia de CTk
+    """
     screen_weight= screen.winfo_screenwidth()
     screen_height= screen.winfo_screenheight()
     # Calcular la posicion en x y y de la ventana
@@ -54,31 +54,34 @@ def center(screen, weight_app, height_app):
     return screen.geometry(f"{weight_app}x{height_app}+{x}+{y}")
 
 
-"""
-Funcion para leer imagenes
-----------
-<path(directorio donde esta la imagen)>:string
-<name(nombre de la imagen)>:string
-<tam(size que se quiere de la imagen)>: int 
-Retorno
-----------
-carga la imagen con la funcion customtkinter.CTkImage
-"""
+
 def read_image(path,name, tam= (20,20)):
+    """
+    Funcion para leer imagenes
+    ----------
+    <path(directorio donde esta la imagen)>:string
+    <name(nombre de la imagen)>:string
+    <tam(size que se quiere de la imagen)>: int 
+    Retorno
+    ----------
+    carga la imagen con la funcion customtkinter.CTkImage
+    """
     try:
         return customtkinter.CTkImage(Image.open(os.path.join(path,name)), size=tam)
     except FileNotFoundError:
         print("Error al cargar las imagenes")
+        raise Exception
 # Directorio donde estan las imagenes 
 global path_image
 path_image =path_image= os.path.join(os.path.dirname(os.path.realpath("Documents")),r"input\Imagenes_Python")
 
-"""
-Clase de la vetana princiapal
-hereda de customtkinter.CTk
-"""
+
 
 class MainWindow(customtkinter.CTk):
+    """
+    Clase de la vetana princiapal
+    hereda de customtkinter.CTk
+    """
     def __init__(self):
         super().__init__()
         #Configurar la principal
@@ -91,10 +94,10 @@ class MainWindow(customtkinter.CTk):
 
         self.sections()
 
-    """
-    funcion donde se declaran las secciones presentes en el display
-    """
     def sections(self):
+        """
+         funcion donde se declaran las secciones presentes en el display
+        """
         #Frames de las secciones principales
         self.up_panel= UpperBar(self)
         #La declaracion de este widget sucede en esta seccion para acceder a la funcion que contrae y despliega el menu
@@ -111,15 +114,16 @@ class MainWindow(customtkinter.CTk):
                                                    command=self.toggle_panel)
         self._menu_bottom.pack(side=ttk.LEFT)
         self.menu_panel= MenuFrame(self)
-        self.body_panel=Body_Frame(self)
+        self.body_panel=BodyFrame(self)
 
         #Metodos para desplegar widgets
         self.up_panel.widgets_upper_bar()
         self.menu_panel.widgets_menu(self.body_panel)
-    """
-    funcion para contraer o desplegar el menu lateral
-    """
+    
     def toggle_panel(self):
+        """
+        funcion para contraer o desplegar el menu lateral
+        """
         if self.menu_panel.winfo_ismapped():
             self.menu_panel.pack_forget()
         else:
@@ -129,6 +133,14 @@ Definicion de los Frames de cada seccion
 Heredan de customtkinter.CTkFrame
 Necesitan que se les pase el Master
 """
+class BodyFrame(customtkinter.CTkFrame):
+    """Clase que configura la ventana principal"""
+    def __init__(self,master):
+        super().__init__(master)
+        self.configure(master,fg_color=COLOR_BODY,width=150)
+        self.pack(side=ttk.RIGHT, fill='both', expand=True)
+        
+        self.grid_columnconfigure(2, weight=1)
 class UpperBar(customtkinter.CTkFrame):
     ''' Clase de la barra superior'''
     def __init__(self,master):
@@ -151,8 +163,9 @@ class UpperBar(customtkinter.CTkFrame):
                                                     text_color=TEXT_COLOR,
                                                     font=("Century Gothic",12))
         self._current_user.pack(side=ttk.RIGHT)
-"""Clase que define al menu lateral"""
+
 class MenuFrame(customtkinter.CTkFrame):
+    """Clase que define al menu lateral"""
     def __init__(self,master):
         super().__init__(master)
         self.menu_icon=read_image(path_image,"menu.png",(40,40))
@@ -162,11 +175,12 @@ class MenuFrame(customtkinter.CTkFrame):
         self.configure(master,width=400)
         self.pack(side=ttk.LEFT, fill='both', expand=False)
         self.grid_rowconfigure(5,weight=1)
-    """
-    funcion que maneja los widgets del menu
-    recibe por parametro el body que representan donde se debe colocar cada widget
-    """
+   
     def widgets_menu(self,body):
+        """
+        funcion que maneja los widgets del menu
+        recibe por parametro el body que representan donde se debe colocar cada widget
+        """
        #Opciones del menu lateral
         self.menu_label=customtkinter.CTkLabel(self, text = " ",compound="top",image=self.menu_icon)
         self.menu_label.grid(row=0, column=0,padx=20,pady=20,sticky="nsew")
@@ -211,25 +225,27 @@ class MenuFrame(customtkinter.CTkFrame):
                                                        command=self.evento_apariencia)
         self.menu_display.grid(row =5, column=0,padx=20,pady=20 ,sticky = "s")
         self.change_window("data_user")
-    #Definir eventos para los botones y menus
     def evento_apariencia(self,op):
+        #Definir eventos para los botones y menus
         customtkinter.set_appearance_mode(op)
-    #Eventocolor
     def evento_color(self,color_theme):
-        customtkinter.set_default_color_theme(color_theme)
-    #Al clickear entrada de datos    
+        #Eventocolor
+        customtkinter.set_default_color_theme(color_theme)   
     def evento_data_user(self):
+        #Al clickear entrada de datos 
         self.change_window("data_user")
-    #Evento para analisis
     def evento_analisis(self):
+        #Evento para analisis
         self.change_window("analisis")
-    #evento para exportar datos
     def evento3(self):
+        #evento para exportar datos
         self.change_window("export")
-    """
-    Esta es la funcion que se encarga de cambiar lo que se ve en el panel principal
-    """
+
     def change_window(self,buttom):
+        """
+        Esta es la funcion que se encarga de cambiar lo que se ve en el panel principal
+        parametro el boton elegido
+        """
         #Esto es para que quede marcada la opcion que se muestra en el momento en pantalla
         if buttom == "analisis":
             self._analisis.configure(fg_color=BUTTOM_HOVER)
@@ -260,20 +276,21 @@ class MenuFrame(customtkinter.CTkFrame):
             export.get_frame().grid(row=0, column=2, sticky = "nsew")
         else:
             export.get_frame().grid_forget()
-
-#Clase abstracta para definir caracteristicas de las otras subclases de la ventana
 class SubFrames(customtkinter.CTkFrame):
+    #Clase abstracta para definir caracteristicas de las otras subclases de la ventana
     def __init__(self, master):
         super().__init__(master)
         self._layout= customtkinter.CTkFrame(master, corner_radius=0,fg_color="transparent")
         self._layout.grid_columnconfigure(0, weight=1)
     def get_frame(self):
+         #Devuelve el Frame
          return self._layout
    
 
 
-#Clase para el boton data_user
+
 class EntradaDatosFrame(SubFrames):
+    #Clase para el boton data_user
     def __init__(self,master):
         #Boton 1
         super().__init__(master)
@@ -306,8 +323,8 @@ class EntradaDatosFrame(SubFrames):
         self._layout.grid_forget()
         self.new_frame._layout.grid(row=0, column=2, sticky = "nsew")
         self.new_frame.columnconfigure(0, weight=1)
-#Clase para el boton analisis
 class Analisis(SubFrames):
+    #Clase para el boton analisis
     def __init__(self,master):
         super().__init__(master)
         self.option_men_var= customtkinter.StringVar(value = "grafica")
@@ -318,9 +335,8 @@ class Analisis(SubFrames):
     def get_option_menu_choice(self,choice):
         print(choice)
 
-# Clase para el boton de exportar datos
-
 class Exportardatos(SubFrames):
+    # Clase para el boton de exportar datos
     def __init__(self,master):
         super().__init__(master)
         self.title_frame3= customtkinter.CTkLabel(self._layout, text ="Opciones de descarga",font=customtkinter.CTkFont(family="Century Gothic", weight="bold"))
@@ -334,15 +350,6 @@ class Exportardatos(SubFrames):
         
     def radio_event(self):
         print(f'radio var is {self.radio_var.get()}')
-class Body_Frame(customtkinter.CTkFrame):
-    def __init__(self,master):
-        super().__init__(master)
-        self.configure(master,fg_color=COLOR_BODY,width=150)
-        self.pack(side=ttk.RIGHT, fill='both', expand=True)
-        
-        self.grid_columnconfigure(2, weight=1)
-#Clase abstracta para definir caracteristicas de las otras subclases de la ventana
-
 app= MainWindow()
 app.mainloop()
 print(app)
