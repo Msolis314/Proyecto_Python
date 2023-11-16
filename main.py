@@ -1,4 +1,5 @@
-from master import Panel
-from login2 import MainApp
-from Usos import reader_image
+
+from Login.login2 import MainApp
+from Login.master import Panel
+from Login.Usos import reader_image
 MainApp()
