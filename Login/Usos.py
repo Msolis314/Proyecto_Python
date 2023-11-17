@@ -16,9 +16,9 @@ def reader_image(path,name, tam= (20,20)):
     """
     try:
         return customtkinter.CTkImage(Image.open(os.path.join(path,name)), size=tam)
-    except FileNotFoundError:
-        print("Error al cargar las imagenes")
-        raise Exception
+    except FileNotFoundError as e:
+        print(f"Error al cargar las imagenes: {e}")
+        
 def center(screen, weight_app, height_app):
     """
     Funcion para colocar la ventana en el centro de la pantalla
