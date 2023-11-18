@@ -1,12 +1,11 @@
 import customtkinter
 import ttkbootstrap as tk
 import os
-from Usos import reader_image
-from Usos import center
-from Usos import set_font 
-from Usos import ExceptionSystem
-from Vars import COLOR_BG
-from Vars import TEXT_COLOR, HOVER_COLOR,BUTTOM_HOVER
+from tools.Usos import reader_image
+from tools.Usos import center
+from tools.Usos import set_font 
+from system_vars.Vars import COLOR_BG
+from system_vars.Vars import TEXT_COLOR, HOVER_COLOR,BUTTOM_HOVER
 
 global path_image
 path_image=os.path.join(os.path.dirname(os.path.realpath("Documents")),r"./Imagenes")

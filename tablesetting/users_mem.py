@@ -1,5 +1,5 @@
 import sqlalchemy as db
-from tablelogin import Usuario
+from .tablelogin import Usuario
 from sqlalchemy.orm import Session
 
 class Usuario_mem():

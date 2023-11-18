@@ -2,15 +2,13 @@ import customtkinter
 import ttkbootstrap as tk
 import os
 from CTkMessagebox import CTkMessagebox
-from Usos import reader_image
-from Usos import center
-from Usos import set_font 
-from Login.users_mem import Usuario_mem
-from tablelogin import Usuario
-import crypto as cr
-from Usos import ExceptionSystem
-from Vars import COLOR_BG
-from Vars import TEXT_COLOR, HOVER_COLOR,BUTTOM_HOVER,TEXT_COLOR2
+from tools.Usos import reader_image
+from tools.Usos import center
+from tools.Usos import set_font 
+from tablesetting.users_mem import Usuario_mem
+from tablesetting.tablelogin import Usuario
+import tools.crypto as cr
+from system_vars.Vars import TEXT_COLOR, HOVER_COLOR,BUTTOM_HOVER,TEXT_COLOR2
 
 global path_image
 path_image=os.path.join(os.path.dirname(os.path.realpath("Documents")),r"./Imagenes")

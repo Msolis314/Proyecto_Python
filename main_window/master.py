@@ -2,8 +2,8 @@ import customtkinter
 import os
 from PIL import Image
 
-from Usos import reader_image
-from Usos import center
+from tools.Usos import reader_image
+from tools.Usos import center
 
 
 global path_image

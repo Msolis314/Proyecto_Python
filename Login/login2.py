@@ -1,20 +1,12 @@
 import customtkinter
 import ttkbootstrap as tk
-from ttkbootstrap.dialogs import Messagebox
-import os
-from master import Panel
-from Usos import reader_image
-from Usos import center
-from Usos import set_font 
-from Usos import ExceptionSystem
-from Vars import COLOR_BG
-from Vars import TEXT_COLOR, HOVER_COLOR,BUTTOM_HOVER
-from interfaz_login import AbstractLogin
-from tablelogin import Usuario
-from Login.users_mem import Usuario_mem
+from main_window.master import Panel
+from .interfaz_login import AbstractLogin
+from tablesetting.tablelogin import Usuario
+from tablesetting.users_mem import Usuario_mem
 from CTkMessagebox import CTkMessagebox
-from interfaz_register import Register
-import crypto as cr
+from .interfaz_register import Register
+import tools.crypto as cr
 
 class MainApp(AbstractLogin):
     def __init__(self):
