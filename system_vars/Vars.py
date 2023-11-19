@@ -1,6 +1,5 @@
 import os
-
-
+"""Módulo con las variables del sistema"""
 COLOR_BG="#42a5f5"
 COLOR_SUPERIOR=("#a7a5a5","#f6f1e8")
 COLOR_MENU=("#a7a5a5","#f6f1e8")

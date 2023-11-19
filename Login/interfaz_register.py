@@ -14,7 +14,7 @@ global path_image
 path_image=os.path.join(os.path.dirname(os.path.realpath("Documents")),r"./Imagenes")
 print(path_image)
 class Register(customtkinter.CTkToplevel):
-
+    """Clase para el registro de usuario"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("Sign in")
